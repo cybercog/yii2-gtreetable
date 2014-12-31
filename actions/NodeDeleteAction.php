@@ -3,7 +3,6 @@
 /*
  * @author Maciej "Gilek" Kłak
  * @copyright Copyright &copy; 2014 Maciej "Gilek" Kłak
- * @version 1.0.0-alpha
  * @package yii2-gtreetable
  */
 
@@ -17,14 +16,13 @@ use yii\helpers\Html;
 class NodeDeleteAction extends ModifyAction {
 
     public function run($id) {
-        $depending = array_keys($this->dependencies);
-        $model = $this->getNodeById($id, $depending);
+        $model = $this->getNodeById($id);
 
-        if ($model->isRoot() && (integer) $model->find()->roots()->count() === 1) {
+        if ($model->isRoot() && (integer) $model->findNestedSet()->roots()->count() === 1) {
             throw new HttpException(500, Yii::t('gtreetable', 'Main element can`t be deleted!'));
         }
 
-        $nodes = $model->descendants()->with($depending)->all();
+        $nodes = $model->descendants()->with()->all();
         $nodes[] = $model;
 
         $trans = $model->getDB()->beginTransaction();
@@ -50,5 +48,3 @@ class NodeDeleteAction extends ModifyAction {
     }
 
 }
-
-?>

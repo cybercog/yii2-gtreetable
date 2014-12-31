@@ -3,7 +3,6 @@
 /*
  * @author Maciej "Gilek" Kłak
  * @copyright Copyright &copy; 2014 Maciej "Gilek" Kłak
- * @version 1.0.0-alpha
  * @package yii2-gtreetable
  */
 
@@ -14,11 +13,11 @@ use creocoder\behaviors\NestedSetQuery;
 
 class TreeQuery extends ActiveQuery {
 
+    public $nestedSetParams = [];
+    
     public function behaviors() {
         return [
-            [
-                'class' => NestedSetQuery::className(),
-            ],
+            array_merge(['class' => NestedSetQuery::className()], $this->nestedSetParams)
         ];
     }
 

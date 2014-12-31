@@ -3,7 +3,6 @@
 /*
  * @author Maciej "Gilek" Kłak
  * @copyright Copyright &copy; 2014 Maciej "Gilek" Kłak
- * @version 1.0.0-alpha
  * @package yii2-gtreetable
  */
 
@@ -24,8 +23,8 @@ class NodeChildrenAction extends BaseAction {
             throw new HttpException(500, $error);
         }
 
-        $query = (new $this->treeModelName)->find();
-
+        $query = (new $this->treeModelName)->findNestedSet();
+        
         $nodes = [];
         if ($id == 0) {
             $nodes = $query->roots()->all();
@@ -38,16 +37,14 @@ class NodeChildrenAction extends BaseAction {
         }
         $result = [];
         foreach ($nodes as $node) {
-            $result[] = array(
-                'id' => $node->id,
-                'name' => $node->name,
-                'level' => $node->level,
-                'type' => $node->type
-            );
+            $result[] = [
+                'id' => $node->getPrimaryKey(),
+                'name' => $node->getName(),
+                'level' => $node->getLevel(),
+                'type' => $node->getType()
+            ];
         }
-        echo Json::encode($result);
+        echo Json::encode(['nodes' => $result]);
     }
 
 }
-
-?>
